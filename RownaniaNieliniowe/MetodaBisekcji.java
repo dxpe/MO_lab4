@@ -2,7 +2,7 @@ public class MetodaBisekcji {
     static double a;
     static double b;
     static double epsilon;
-    double x_sr = 1;
+    double x_sr;
     int iteration = 1;
 
     static {
@@ -11,45 +11,53 @@ public class MetodaBisekcji {
         epsilon = 0.05;
     }
 
+    public void warunek() {
+        if (function(a) * function(b) < 0) {
+            System.out.println("Warunek konieczny spełniony");
+        } else {
+            System.out.println("Warunek konieczny niespełniony");
+        }
+    }
+
+    public boolean warunek_x_sr() {
+        return function(x_sr) * function(a) < 0;
+    }
+
     public double function(double x) {
         return Math.pow(x, 2) + x - 5;
     }
 
-    public boolean check(double a, double b) {
-        if (function(a) * function(b) < 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public void calculate_x_sr(double a, double b) {
+    public void calc_x_sr() {
         x_sr = (a + b) / 2;
     }
 
-    public void calculate() {
-        calculate_x_sr(a, b);;
-        while (Math.abs(function(x_sr)) > epsilon) {
-            if (x_sr == 0) {
-                System.out.println("Iteracja: " + iteration);
-                System.out.println("x_sr = " + x_sr + " jest rozwiazaniem");
-            }
+    public void calc_przedzial() {
+        if (warunek_x_sr()) {
+            b = x_sr;
+        } else {
+            a = x_sr;
+        }
+    }
 
-            if (check(x_sr, a)) {
-                b = x_sr;
-                calculate_x_sr(a, x_sr);
-            } else {
-                a = x_sr;
-                calculate_x_sr(x_sr, b);
-            }
+    public void oblicz() {
+        warunek();
+        calc_x_sr();
+        if (x_sr == 0) {
+            System.out.println("Wynik = " + x_sr);
+        } else {
             iteration++;
         }
-        System.out.println("Iteracja: " + iteration);
-        System.out.println("x_sr = " + x_sr + " jest rozwiazaniem");
+        while (!(Math.abs(function(x_sr)) < epsilon)) {
+            calc_przedzial();
+            calc_x_sr();
+            iteration++;
+        }
+
+        System.out.println("Iteracja: " + iteration + " rozwiazanie: " + x_sr + ", funkcja: " + function(x_sr));
     }
 
     public static void main(String[] args) {
         MetodaBisekcji mb = new MetodaBisekcji();
-        mb.calculate();
+        mb.oblicz();
     }
 }

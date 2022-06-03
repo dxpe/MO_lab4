@@ -2,10 +2,7 @@ public class MetodaStycznych {
     static double a;
     static double b;
     static double epsilon;
-    int iteration = 0;
-    double x0;
-    double xn1;
-    double xn;
+    int iteration = 1;
     int n = 1;
 
     static {
@@ -14,58 +11,59 @@ public class MetodaStycznych {
         epsilon = 0.01;
     }
 
-    public double function(double x) {
+    public double func(double x) {
         return Math.pow(x, 2) + x - 5;
     }
 
-    public double function_prim(double x) {
+    public double func_prim(double x) {
         return 2 * x + 1;
     }
 
-    public double function_bis(double x) {
+    public double func_bis(double x) {
         return 2;
     }
 
-    public void calculate_x0(){
-        if (function(a) * function_bis(a) >= 0) {
-            x0 = a;
+    public void warunek() {
+        if (func(a) * func(b) < 0 && func_prim(a) * func_prim(b) >= 0 && func_bis(a) * func_bis(b) >= 0) {
+            System.out.println("Warunek konieczny spełniony");
         } else {
-            x0 = b;
-        }
-        xn = x0;
-    }
-
-    public boolean check(double a, double b) {
-        if (function(a) * function(b) < 0) {
-            return true;
-        } else {
-            return false;
+            System.out.println("Warunek konieczny niespełniony");
         }
     }
 
-    public double calculate_x_n(int n) {
+    public double xn1(int n) {
         if (n == 0) {
-            return xn;
+            return x0();
         } else {
-            return calculate_x_n(n - 1) - function(calculate_x_n(n - 1)) / function_prim(calculate_x_n(n - 1));
+            return xn1(n - 1) - func(xn1(n - 1)) / func_prim(xn1(n - 1));
         }
     }
 
-    public void calculate() {
-        calculate_x0();
-        xn1 = xn;
-        while (Math.abs(function(xn1)) > epsilon){
-            xn1 = calculate_x_n(n);
-            iteration++;
-            n++;
-            System.out.println(xn1);
+    public double x0() {
+        if (func_bis(a) * func(a) >= 0) {
+            return a;
+        } else {
+            return b;
         }
-        System.out.println("Iteracja: " + iteration);
-        System.out.println("xn1 = " + xn1 + " jest rozwiazaniem");
+    }
+
+    public void oblicz() {
+        warunek();
+        double xn1_func = func(xn1(n));
+        double xn1_n1 = xn1(n);
+        double xn1_n = xn1(n - 1);
+        while(Math.abs(xn1_func) >= epsilon && Math.abs(xn1_n1 - xn1_n) >= epsilon) {
+            n++;
+            iteration++;
+            xn1_func = func(xn1(n));
+            xn1_n1 = xn1(n);
+            xn1_n = xn1(n - 1);
+        }
+        System.out.println("Iteracja: " + iteration + " rozwiazanie: " + xn1_n1 + ", funkcja: " + func(xn1_n1));
     }
 
     public static void main(String[] args) {
         MetodaStycznych ms = new MetodaStycznych();
-        ms.calculate();
+        ms.oblicz();
     }
 }

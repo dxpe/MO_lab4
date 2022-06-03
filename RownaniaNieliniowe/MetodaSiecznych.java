@@ -2,7 +2,7 @@ public class MetodaSiecznych {
     static double a;
     static double b;
     static double epsilon;
-    int iteration;
+    int iteration = 1;
     int n = 1;
 
     static {
@@ -58,13 +58,13 @@ public class MetodaSiecznych {
                 n++;
                 iteration++;
             }
-            System.out.println("Iteracja: " + iteration + " rozwiazanie: " + xn1_a(n));
+            System.out.println("Iteracja: " + iteration + " rozwiazanie: " + xn1_a(n) + ", funkcja: " + func(xn1_a(n)));
         } else {
             while(Math.abs(func(xn1_b(n))) > epsilon && Math.abs(xn1_b(n) - xn1_b(n - 1)) > epsilon) {
                 n++;
                 iteration++;
             }
-            System.out.println("Iteracja: " + iteration + " rozwiazanie: " + xn1_b(n));
+            System.out.println("Iteracja: " + iteration + " rozwiazanie: " + xn1_b(n) + ", funkcja: " + func(xn1_b(n)));
         }
     }
 
